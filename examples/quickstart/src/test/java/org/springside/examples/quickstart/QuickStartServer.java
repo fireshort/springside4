@@ -26,7 +26,7 @@ public class QuickStartServer {
 		Profiles.setProfileAsSystemProperty(Profiles.DEVELOPMENT);
 
 		// 启动Jetty
-		Server server = JettyFactory.createServerInSource(PORT, CONTEXT);
+		Server server = JettyFactory.createServerInSource(PORT, CONTEXT,"examples/quickstart");
 		JettyFactory.setTldJarNames(server, TLD_JAR_NAMES);
 
 		try {
