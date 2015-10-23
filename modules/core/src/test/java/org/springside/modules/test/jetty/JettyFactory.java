@@ -45,7 +45,8 @@ public class JettyFactory {
         connector.setReuseAddress(false);
         server.setConnectors(new Connector[]{connector});
 
-        WebAppContext webContext = new WebAppContext(baseDir+"/"+DEFAULT_WEBAPP_PATH, contextPath);
+        String webAppPath =baseDir.length()>0?baseDir + "/" + DEFAULT_WEBAPP_PATH:DEFAULT_WEBAPP_PATH;
+        WebAppContext webContext = new WebAppContext(webAppPath, contextPath);
         // 修改webdefault.xml，解决Windows下Jetty Lock住静态文件的问题.
         webContext.setDefaultsDescriptor(WINDOWS_WEBDEFAULT_PATH);
         server.setHandler(webContext);
@@ -73,18 +74,27 @@ public class JettyFactory {
      * 快速重新启动application，重载target/classes与target/test-classes.
      */
     public static void reloadContext(Server server) throws Exception {
+        reloadContext(server,".");
+    }
+
+    /**
+     * 快速重新启动application，重载target/classes与target/test-classes.
+     */
+    public static void reloadContext(Server server, String baseDir) throws Exception {
         WebAppContext context = (WebAppContext) server.getHandler();
 
         System.out.println("[INFO] Application reloading");
         context.stop();
 
         WebAppClassLoader classLoader = new WebAppClassLoader(context);
-        classLoader.addClassPath("target/classes");
-        classLoader.addClassPath("target/test-classes");
+        classLoader.addClassPath(baseDir+"/"+"target/classes");
+        classLoader.addClassPath(baseDir+"/"+"target/test-classes");
         context.setClassLoader(classLoader);
 
         context.start();
 
         System.out.println("[INFO] Application reloaded");
     }
+
+
 }

@@ -39,7 +39,7 @@ public class QuickStartServer {
 			while (true) {
 				char c = (char) System.in.read();
 				if (c == '\n') {
-					JettyFactory.reloadContext(server);
+					JettyFactory.reloadContext(server,"examples/quickstart");
 				}
 			}
 		} catch (Exception e) {
